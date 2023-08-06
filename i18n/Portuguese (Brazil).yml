@@ -231,7 +231,6 @@ creation:
         markdown: "Por favor, não use símbolos de formatação nos nomes, descrição ou opções. Esses símbolos são `_`, ` * ` e `[`. \nPor favor, envie-me a mensagem novamente sem esses símbolos. \n"
         too_big: 'Por favor, envie um número menor. Você também pode usar uma enquete "Votos ilimitados"'
         invalid_poll_name: 'O nome da sua enquete provavelmente contém caracteres inválidos. Por favor, tente novamente.'
-    too_many_polls: "Você tem muitas enquetes (%{count}). Por favor, fique abaixo de 200. Exclua as antigas primeiro. \n\n Você pode simplesmente excluir todas as enquetes antigas com /start->Configurações->Excluir todas as enquetes encerradas."
     native_poll:
         merged: "Ótimo! Criando uma enquete com essas configurações 👍\n\n*Tipo de enquete*: %{poll_type} \n*Anonimato*: %{anonymity} \n*Resultados visíveis*: %{results_visible} \n\nGostaria de alterar o tipo ou *continuar com a %{poll_type}\"?"
         quiz_unsupported: 'Desculpe, você não pode criar uma enquete a partir de um Quiz do Telegram. Envie uma enquete normal do Telegram.'

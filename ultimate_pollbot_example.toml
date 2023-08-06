@@ -6,7 +6,6 @@ admin = "admin"
 allow_private_vote = false
 max_user_votes_per_day = 200
 max_inline_shares = 20
-max_polls_per_user = 200
 
 [database]
 sql_uri = "postgres://localhost/pollbot"

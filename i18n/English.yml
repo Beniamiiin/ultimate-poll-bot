@@ -230,7 +230,6 @@ creation:
         markdown: "Please don't use markdown symbols in your names, description or options. Such symbols are `_`,`*` and `[`.\nPlease send me the message again without these symbols.\n"
         too_big: 'Please send a smaller number. You also might want to use an "Unlimited votes" poll'
         invalid_poll_name: 'Your poll name probably contains invalid characters. Please try again.'
-    too_many_polls: "You're owning too many polls (%{count}). Please keep it under 200 polls. Delete old ones first. \n\nYou can simply delete all old polls with /start->Settings->Delete all closed polls."
     native_poll:
         merged: "Nice, creating a new poll from these settings 👍\n\n*Poll type*: %{poll_type}\n*Anonymity*: %{anonymity}\n*Visible results*: %{results_visible}\n\nWould you like to change the poll type or *continue with a %{poll_type}*?"
         quiz_unsupported: 'Sorry, you cannot create a poll from a native Telegram Quiz. Send me a regular Telegram poll instead.'

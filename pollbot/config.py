@@ -14,7 +14,6 @@ default_config = {
         "allow_private_vote": False,
         "max_user_votes_per_day": 200,
         "max_inline_shares": 20,
-        "max_polls_per_user": 200,
     },
     "database": {
         "sql_uri": "postgresql://pollbot:localhost/pollbot",

@@ -29,13 +29,6 @@ def initialize_poll(session: scoped_session, user: User, chat: Chat) -> None:
     """
     user.started = True
 
-    # Early return, if the user owns too many polls
-    if len(user.polls) > config["telegram"]["max_polls_per_user"]:
-        chat.send_message(
-            i18n.t("creation.too_many_polls", locale=user.locale, count=len(user.polls))
-        )
-        return
-
     # Early return, if the user is already in the middle of creating a poll
     if user.current_poll is not None and not user.current_poll.created:
         chat.send_message(
