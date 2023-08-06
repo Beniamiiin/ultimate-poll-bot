@@ -25,7 +25,7 @@ default_config = {
         "sentry_enabled": False,
         "sentry_token": "",
         "log_level": logging.INFO,
-        "debug": False,
+        "debug": True,
     },
     "webhook": {
         "enabled": False,

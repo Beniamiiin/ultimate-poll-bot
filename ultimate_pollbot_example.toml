@@ -17,7 +17,7 @@ overflow_count = 10
 sentry_enabled = false
 sentry_token = ""
 log_level = 20
-debug = false
+debug = true
 
 [webhook]
 enabled = false
