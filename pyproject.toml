@@ -24,7 +24,7 @@ python-i18n = { version = "^0.3", extras = ["yaml"] }
 toml = "^0.10"
 typer = "^0.6"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 autoflake = "^1"
 black = { version = "*", allow-prereleases = true }
 flake8 = "^5"
