@@ -36,7 +36,7 @@ default_config = {
     },
 }
 
-config_path = os.path.expanduser("~/.config/ultimate_pollbot.toml")
+config_path = os.path.expanduser("./ultimate_pollbot.toml")
 
 if not os.path.exists(config_path):
     with open(config_path, "w") as file_descriptor:

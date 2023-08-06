@@ -1,0 +1,74 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - s16
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create config file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "ultimate_pollbot_example.toml"
+          target: "ultimate_pollbot.toml"
+
+      - name: Update telegram.bot_name in config file
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "ultimate_pollbot.toml"
+          key: "telegram.bot_name"
+          value: ${{ vars.BOT_NAME }}
+
+      - name: Update telegram.api_key in config file
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "ultimate_pollbot.toml"
+          key: "telegram.api_key"
+          value: ${{ secrets.BOT_TOKEN }}
+
+      - name: Update telegram.admin in config file
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "ultimate_pollbot.toml"
+          key: "telegram.admin"
+          value: ${{ vars.BOT_ADMIN }}
+
+      - name: Update database.sql_uri in config file
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "ultimate_pollbot.toml"
+          key: "database.sql_uri"
+          value: ${{ secrets.DB_URL }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./cmd/access_governance_bot/Dockerfile
+          build-args: |
+            ENVIRONMENT=${{ vars.ENVIRONMENT }}
+            COMMUNITY_NAME=${{ vars.COMMUNITY_NAME }}
+            INITIAL_SEEDERS=${{ vars.INITIAL_SEEDERS }}
+            RENOMINATION_PERIOD_MONTHS=${{ vars.RENOMINATION_PERIOD_MONTHS }}
+            VOTING_DURATION_DAYS=${{ vars.VOTING_DURATION_DAYS }}
+            LOKI_URL=${{ secrets.LOKI_URL }}
+            DB_URL=${{ secrets.DB_URL }}
+            TELEGRAM_ACCESS_GOVERNANCE_BOT_TOKEN=${{ secrets.TELEGRAM_ACCESS_GOVERNANCE_BOT_TOKEN }}
+          push: true
+          tags: ghcr.io/beniamiiin/ultimate-poll-bot:latest

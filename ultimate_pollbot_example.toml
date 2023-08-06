@@ -2,13 +2,16 @@
 bot_name = "your_bots_@_name"
 api_key = "your_telegram_api_key"
 worker_count = 20
+admin = "admin"
 allow_private_vote = false
+max_user_votes_per_day = 200
 max_inline_shares = 20
+max_polls_per_user = 200
 
 [database]
 sql_uri = "postgres://localhost/pollbot"
-connection_count = 10
-overflow_count = 5
+connection_count = 20
+overflow_count = 10
 
 [logging]
 sentry_enabled = false
