@@ -54,7 +54,7 @@ jobs:
         with:
           file: "ultimate_pollbot.toml"
           key: "telegram.max_polls_per_user"
-          value: 999999999999999999999
+          value: 99999
 
       - name: Update database.sql_uri in config file
         uses: ciiiii/toml-editor@1.0.0
