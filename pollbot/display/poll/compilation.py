@@ -79,7 +79,7 @@ def compile_poll_text(
     lines.append(f"✉️ *{poll.name}*")
 
     if poll.description is not None:
-        lines.append(f"😄_{poll.description}_")
+        lines.append(f"😇_{poll.description}_")
 
     # Anonymity information
     if not context.show_results or context.anonymous:
