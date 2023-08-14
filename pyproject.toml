@@ -23,6 +23,8 @@ python-i18n = { version = "^0.3", extras = ["yaml"] }
 "ruamel.yaml" = "^0.17"
 toml = "^0.10"
 typer = "^0.6"
+flask-restful = "^0.3.10"
+gunicorn = "^21.2.0"
 
 [tool.poetry.group.dev.dependencies]
 autoflake = "^1"

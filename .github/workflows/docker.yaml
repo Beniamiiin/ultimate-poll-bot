@@ -56,9 +56,17 @@ jobs:
           key: "database.sql_uri"
           value: ${{ secrets.DB_URL }}
 
-      - name: Build and push
+      - name: Build and push bot
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           tags: ghcr.io/beniamiiin/ultimate-poll-bot:latest
+
+      - name: Build and push api
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          file: api.Dockerfile
+          tags: ghcr.io/beniamiiin/ultimate-poll-bot:api
