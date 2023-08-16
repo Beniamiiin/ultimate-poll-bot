@@ -1,8 +1,9 @@
-import logging
 import traceback
 from datetime import datetime, timedelta
 
 import telegram
+from dateutil import parser
+from flask import request
 from flask_restful import Resource
 from sqlalchemy import select
 
@@ -17,20 +18,23 @@ from pollbot.poll.option import add_option
 class PollApi(Resource):
     def post(self):
         session = get_session()
+        request_body = request.get_json()
 
-        stmt = select(User).where(User.id == 83758704)
+        api_config = config['api']
+
+        stmt = select(User).where(User.username == api_config['admin'])
 
         user = session.scalar(stmt)
 
         poll = Poll(user)
-        poll.name = "Poll name from api"
-        poll.description = "Poll description from api"
+        poll.name = request_body['name']
+        poll.description = request_body['description']
         poll.locale = user.locale
         poll.poll_type = PollType.single_vote.name
         poll.number_of_votes = 0
         poll.anonymous = True
         poll.results_visible = False
-        poll.set_due_date(datetime.today() + timedelta(days=14))
+        poll.set_due_date(parser.parse(request_body['due_date']))
         poll.allow_new_options = False
         poll.allow_sharing = False
         poll.show_percentage = True
@@ -58,20 +62,45 @@ class PollApi(Resource):
         session.add(reference)
         session.commit()
 
-        text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
-
         try:
-            logging.basicConfig(
-                format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG
-            )
+            text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
 
-            telegram.Bot(token=config['telegram']['api_key']).send_message(
+            bot = telegram.Bot(token=config['telegram']['api_key'])
+
+            poll_message = bot.send_message(
                 text=text,
-                chat_id=-1001800658028,
+                chat_id=api_config['seeders_channel_id'],
                 reply_markup=keyboard,
-                parse_mode="markdown",
+                parse_mode='markdown',
                 disable_web_page_preview=True,
             )
+            poll_message_url = self.create_message_url(poll_message)
+
+            text = f'A discussion thread of the [proposal]({poll_message_url})'
+            discussion_message = bot.send_message(
+                text=text,
+                chat_id=api_config['seeders_channel_id'],
+                parse_mode='markdown',
+                disable_web_page_preview=True,
+            )
+            discussion_message_url = self.create_message_url(discussion_message)
+
+            if len(poll.description):
+                poll.description += f'\n\nA discussion thread can be find [here]({discussion_message_url})'
+            else:
+                poll.description = f'A discussion thread can be find [here]({discussion_message_url})'
+
+            text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
+            bot.edit_message_text(
+                text=text,
+                chat_id=api_config['seeders_channel_id'],
+                reply_markup=keyboard,
+                parse_mode='markdown',
+                disable_web_page_preview=True,
+                message_id=poll_message['message_id']
+            )
+
+            session.flush()
         except:
             traceback.print_exc()
 
@@ -79,3 +108,11 @@ class PollApi(Resource):
             session.commit()
 
         return 'Ok', 200
+
+
+    def create_message_url(self, message):
+        chat_id = str(message['chat']['id'])
+        chat_id = chat_id.removeprefix('-100')
+
+        message_id = message['message_id']
+        return f'https://t.me/c/{chat_id}/{message_id}'

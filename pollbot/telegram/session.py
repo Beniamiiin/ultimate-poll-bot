@@ -328,6 +328,7 @@ def get_user(session: scoped_session, tg_user: User) -> User:
 
     if tg_user.username is not None:
         user.username = tg_user.username.lower()
+        user.admin = True if user.username in [admin.lower() for admin in config['telegram']['admins']] else False
 
     name = get_name_from_tg_user(tg_user)
     user.name = name

@@ -2,10 +2,14 @@
 bot_name = "your_bots_@_name"
 api_key = "your_telegram_api_key"
 worker_count = 20
-admin = "admin"
+admins = ["admin"]
 allow_private_vote = false
 max_user_votes_per_day = 200
 max_inline_shares = 20
+
+[api]
+admin = "admin"
+seeders_channel_id = 0
 
 [database]
 sql_uri = "postgres://localhost/pollbot"
