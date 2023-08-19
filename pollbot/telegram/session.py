@@ -328,7 +328,8 @@ def get_user(session: scoped_session, tg_user: User) -> User:
 
     if tg_user.username is not None:
         user.username = tg_user.username.lower()
-        admins = [admin.lower() for admin in config['telegram']['admins']]
+
+        admins = [admin.lower() for admin in config['telegram']['admins'].replace(' ', '').split(',')]
         print(f"[Ben] admins: {admins}")
         user.admin = True if user.username in admins else False
 

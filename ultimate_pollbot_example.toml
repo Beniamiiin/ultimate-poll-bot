@@ -2,7 +2,7 @@
 bot_name = "your_bots_@_name"
 api_key = "your_telegram_api_key"
 worker_count = 20
-admins = ["admin"]
+admins = "admin1, admin2"
 allow_private_vote = false
 max_user_votes_per_day = 200
 max_inline_shares = 20
