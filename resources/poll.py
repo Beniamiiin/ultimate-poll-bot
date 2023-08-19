@@ -128,7 +128,6 @@ class PollApi(Resource):
             reply_markup=keyboard,
             parse_mode='markdown',
             disable_web_page_preview=True,
-            disable_notification=True,
         )
 
     def create_message_url(self, message):
