@@ -36,8 +36,6 @@ class PollApi(Resource):
             )
 
             self.send_message_to_channel(seeders_channel_id=api_config['seeders_channel_id'], poll=poll, session=session)
-
-            session.flush()
         except:
             traceback.print_exc()
 
@@ -120,6 +118,8 @@ class PollApi(Resource):
         else:
             poll.description = f'A discussion thread can be find [here]({discussion_message_url})'
 
+        session.commit()
+        
         text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
         bot.edit_message_text(
             text=text,
