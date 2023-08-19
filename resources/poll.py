@@ -101,6 +101,7 @@ class PollApi(Resource):
             reply_markup=keyboard,
             parse_mode='markdown',
             disable_web_page_preview=True,
+            disable_notification=True,
         )
         poll_message_url = self.create_message_url(poll_message)
 
@@ -110,6 +111,7 @@ class PollApi(Resource):
             chat_id=seeders_channel_id,
             parse_mode='markdown',
             disable_web_page_preview=True,
+            disable_notification=True,
         )
         discussion_message_url = self.create_message_url(discussion_message)
 
@@ -122,10 +124,11 @@ class PollApi(Resource):
         bot.edit_message_text(
             text=text,
             chat_id=seeders_channel_id,
+            message_id=poll_message['message_id'],
             reply_markup=keyboard,
             parse_mode='markdown',
             disable_web_page_preview=True,
-            message_id=poll_message['message_id']
+            disable_notification=True,
         )
 
     def create_message_url(self, message):

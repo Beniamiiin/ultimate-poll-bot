@@ -53,6 +53,8 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
+logging.getLogger('apscheduler.executors.default').propagate = False
+
 # Initialize telegram updater and dispatcher
 updater = Updater(
     token=config["telegram"]["api_key"],
