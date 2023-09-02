@@ -37,7 +37,7 @@ class Poll(base):
     # Options
     name = Column(String)
     description = Column(String)
-    locale = Column(String, default="English")
+    locale = Column(String, default="Russian")
     poll_type = Column(String, nullable=False)
     number_of_votes = Column(Integer, default=0)
 

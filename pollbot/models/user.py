@@ -31,7 +31,7 @@ class User(base):
 
     # Permanent settings
     admin = Column(Boolean, nullable=False, default=False)
-    locale = Column(String, default="English")
+    locale = Column(String, default="Russian")
     european_date_format = Column(Boolean, nullable=False, default=False)
     notifications_enabled = Column(Boolean, nullable=False, default=True)
 
@@ -68,6 +68,6 @@ class User(base):
         self.current_poll = None
         self.username = "GDPR removed user"
         self.name = "GDPR removed user"
-        self.locale = "English"
+        self.locale = "Russian"
         self.european_date_format = False
         self.notifications_enabled = False

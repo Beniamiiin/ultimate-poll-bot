@@ -163,7 +163,7 @@ def callback_query_wrapper(func: Callable[[Bot, Update, Session, User], Any]):
                         },
                     )
 
-                locale = "English"
+                locale = "Russian"
                 if user is not None:
                     locale = user.locale
                 try:
@@ -264,7 +264,7 @@ def message_wrapper(private=False):
                             },
                         )
 
-                    locale = "English"
+                    locale = "Russian"
                     if user is not None:
                         locale = user.locale
 
@@ -330,7 +330,6 @@ def get_user(session: scoped_session, tg_user: User) -> User:
         user.username = tg_user.username.lower()
 
         admins = [admin.lower() for admin in config['telegram']['admins'].replace(' ', '').split(',')]
-        print(f"[Ben] admins: {admins}")
         user.admin = True if user.username in admins else False
 
     name = get_name_from_tg_user(tg_user)

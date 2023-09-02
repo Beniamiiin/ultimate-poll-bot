@@ -19,6 +19,7 @@ poll_model = {
     'id': fields.Integer,
 }
 
+
 class PollApi(Resource):
     @marshal_with(poll_model)
     def post(self):
