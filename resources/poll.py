@@ -102,7 +102,7 @@ class PollApi(Resource):
             disable_web_page_preview=True,
             disable_notification=True,
         )
-        reference.poll.message_id = poll_message.message_id
+        reference.message_id = poll_message.message_id
         poll_message_url = self.create_message_url(poll_message)
 
         text = f'A discussion thread of the [proposal]({poll_message_url})'
@@ -126,15 +126,15 @@ class PollApi(Resource):
         bot.edit_message_text(
             text=text,
             chat_id=seeders_channel_id,
-            message_id=poll_message['message_id'],
+            message_id=poll_message.message_id,
             reply_markup=keyboard,
             parse_mode='markdown',
             disable_web_page_preview=True,
         )
 
-    def create_message_url(self, message):
-        chat_id = str(message['chat']['id'])
+    def create_message_url(self, message: telegram.Message):
+        chat_id = str(message.chat_id)
         chat_id = chat_id.removeprefix('-100')
 
-        message_id = message['message_id']
+        message_id = message.message_id
         return f'https://t.me/c/{chat_id}/{message_id}'
