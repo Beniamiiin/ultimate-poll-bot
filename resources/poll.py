@@ -28,15 +28,25 @@ class PollApi(Resource):
         api_config = config['api']
 
         try:
+            stmt = select(User).where(User.username == api_config['admin'])
+
+            user = session.scalar(stmt)
+            user.expected_input = None
+            user.current_poll = None
+
             poll = self.create_poll(
-                admin_username=api_config['admin'],
+                user=user,
                 poll_name=request_body['name'],
                 poll_description=request_body['description'] if 'description' in request_body else None,
                 due_date_string=request_body['due_date'],
                 session=session,
             )
 
-            self.send_message_to_channel(seeders_channel_id=api_config['seeders_channel_id'], poll=poll, session=session)
+            reference = Reference(poll, ReferenceType.admin.name, user=user, message_id=1)
+            session.add(reference)
+            session.commit()
+
+            self.send_message_to_channel(seeders_channel_id=api_config['seeders_channel_id'], reference=reference, session=session)
         except:
             traceback.print_exc()
 
@@ -47,12 +57,7 @@ class PollApi(Resource):
 
         return poll, 200
 
-    def create_poll(self, admin_username: str, poll_name: str, poll_description: Optional[str], due_date_string: str,
-                    session: Session) -> Poll:
-        stmt = select(User).where(User.username == admin_username)
-
-        user = session.scalar(stmt)
-
+    def create_poll(self, user: User, poll_name: str, poll_description: Optional[str], due_date_string: str, session: Session) -> Poll:
         poll = Poll(user)
         poll.name = poll_name
         poll.description = poll_description
@@ -71,6 +76,7 @@ class PollApi(Resource):
         poll.compact_buttons = False
         poll.summarize = False
         poll.created = True
+
         session.add(poll)
 
         for option_to_add in ['Yes', 'No', 'Acknowledge']:
@@ -80,16 +86,10 @@ class PollApi(Resource):
 
             session.add(option)
 
-        user.expected_input = None
-        user.current_poll = None
-
-        reference = Reference(poll, ReferenceType.admin.name, user=user, message_id=1)
-        session.add(reference)
-        session.commit()
-
         return poll
 
-    def send_message_to_channel(self, seeders_channel_id: int, poll: Poll, session: Session):
+    def send_message_to_channel(self, seeders_channel_id: int, reference: Reference, session: Session):
+        poll = reference.poll
         text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
 
         bot = telegram.Bot(token=config['telegram']['api_key'])
@@ -102,6 +102,7 @@ class PollApi(Resource):
             disable_web_page_preview=True,
             disable_notification=True,
         )
+        reference.poll.message_id = poll_message.message_id
         poll_message_url = self.create_message_url(poll_message)
 
         text = f'A discussion thread of the [proposal]({poll_message_url})'
@@ -120,7 +121,7 @@ class PollApi(Resource):
             poll.description = f'A discussion thread can be find [here]({discussion_message_url})'
 
         session.commit()
-        
+
         text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
         bot.edit_message_text(
             text=text,
