@@ -79,7 +79,7 @@ class PollApi(Resource):
 
         session.add(poll)
 
-        for option_to_add in ['Yes', 'No', 'Acknowledge']:
+        for option_to_add in ['Да', 'Нет', 'Видел']:
             option = add_option(poll, option_to_add, [], False)
             if option is None:
                 continue
@@ -105,7 +105,7 @@ class PollApi(Resource):
         reference.message_id = poll_message.message_id
         poll_message_url = self.create_message_url(poll_message)
 
-        text = f'A discussion thread of the [proposal]({poll_message_url})'
+        text = f'Тред с обсуждением этого [предложения]({poll_message_url})'
         discussion_message = bot.send_message(
             text=text,
             chat_id=seeders_channel_id,
@@ -116,10 +116,11 @@ class PollApi(Resource):
         )
         discussion_message_url = self.create_message_url(discussion_message)
 
+        description = f'Тред с обсуждением этого [предложения]({discussion_message_url})'
         if poll.description and len(poll.description) > 0:
-            poll.description += f'\n\nA discussion thread can be find [here]({discussion_message_url})'
+            poll.description += f'\n\n{description}'
         else:
-            poll.description = f'A discussion thread can be find [here]({discussion_message_url})'
+            poll.description = description
 
         session.commit()
 
