@@ -52,7 +52,7 @@ class Poll(base):
     # Styling
     show_percentage = Column(Boolean, nullable=False, default=True)
     show_option_votes = Column(Boolean, nullable=False, default=True)
-    european_date_format = Column(Boolean, nullable=False, default=False)
+    european_date_format = Column(Boolean, nullable=False, default=True)
     permanently_summarized = Column(Boolean, nullable=False, default=False)
     compact_buttons = Column(Boolean, nullable=False, default=False)
     summarize = Column(Boolean, nullable=False, default=False)

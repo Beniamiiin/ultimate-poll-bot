@@ -32,7 +32,7 @@ class User(base):
     # Permanent settings
     admin = Column(Boolean, nullable=False, default=False)
     locale = Column(String, default="Russian")
-    european_date_format = Column(Boolean, nullable=False, default=False)
+    european_date_format = Column(Boolean, nullable=False, default=True)
     notifications_enabled = Column(Boolean, nullable=False, default=True)
 
     # Chat logic
@@ -69,5 +69,5 @@ class User(base):
         self.username = "GDPR removed user"
         self.name = "GDPR removed user"
         self.locale = "Russian"
-        self.european_date_format = False
+        self.european_date_format = True
         self.notifications_enabled = False
