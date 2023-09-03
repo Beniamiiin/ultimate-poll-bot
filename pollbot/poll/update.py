@@ -180,6 +180,25 @@ def update_reference(
                 disable_web_page_preview=True,
             )
 
+        # Edit message created via api query
+        elif reference.type == ReferenceType.api.name:
+            print("10 BEN")
+            text, keyboard = get_poll_text_and_vote_keyboard(
+                session,
+                poll,
+                user=reference.user,
+            )
+            print(f"11 BEN {text}, {keyboard}, {reference.chat_id}, {reference.message_id}")
+            bot.edit_message_text(
+                text,
+                chat_id=reference.chat_id,
+                message_id=reference.message_id,
+                reply_markup=keyboard,
+                parse_mode="markdown",
+                disable_web_page_preview=True,
+            )
+            print("12 BEN")
+
         # Edit message created via inline query
         elif reference.type == ReferenceType.inline.name:
             # Create text and keyboard

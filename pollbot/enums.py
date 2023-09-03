@@ -55,6 +55,7 @@ class ReferenceType(Enum):
     inline = 1
     admin = 2
     private_vote = 3
+    api = 4
 
 
 @unique

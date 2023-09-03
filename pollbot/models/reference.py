@@ -19,6 +19,7 @@ class Reference(base):
     type = Column(String)
     bot_inline_message_id = Column(String)
     message_id = Column(BigInteger)
+    chat_id = Column(BigInteger)
 
     # Keep those for now, in case we migrate to mtproto
     message_dc_id = Column(BigInteger)
@@ -52,12 +53,13 @@ class Reference(base):
         reference_type,
         user=None,
         message_id=None,
+        chat_id=None,
         inline_message_id=None,
     ):
         """Create a new poll."""
         self.poll = poll
         self.type = reference_type
-        # There are three types of references
+        # There are four types of references
         # 1. Messages in private chat:
         # - Admin interface
         # - Private vote
@@ -77,6 +79,14 @@ class Reference(base):
         ):
             self.bot_inline_message_id = inline_message_id
 
+        # 3. Messages shared via api
+        elif (
+            chat_id is not None
+            and reference_type == ReferenceType.api.name
+        ):
+            self.message_id = message_id
+            self.chat_id = chat_id
+
         else:
             raise Exception(
                 "Tried to create Reference with wrong type or missing parameters"
@@ -88,6 +98,8 @@ class Reference(base):
             message = f"Reference {self.id}: message_id {self.message_id}"
         elif self.type == ReferenceType.admin.name:
             message = f"Reference {self.id}: message_id {self.message_id}, admin: {self.user.id}"
+        elif self.type == ReferenceType.api.name:
+            message = f"Reference {self.id}: message_id {self.message_id}, chat_id: {self.chat_id}"
         else:
             message = f"Reference {self.id}: message_id {self.message_id}, user: {self.user.id}"
 

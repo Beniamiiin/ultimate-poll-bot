@@ -42,7 +42,7 @@ class PollApi(Resource):
                 session=session,
             )
 
-            reference = Reference(poll, ReferenceType.admin.name, user=user, message_id=1)
+            reference = Reference(poll, ReferenceType.api.name, user=user, chat_id=api_config['seeders_channel_id'])
             session.add(reference)
             session.commit()
 
@@ -112,6 +112,7 @@ class PollApi(Resource):
             parse_mode='markdown',
             disable_web_page_preview=True,
             disable_notification=True,
+            reply_to_message_id=poll_message.message_id,
         )
         discussion_message_url = self.create_message_url(discussion_message)
 

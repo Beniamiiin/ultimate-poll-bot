@@ -62,6 +62,16 @@ def delete_poll(
                     message_id=reference.message_id,
                 )
 
+            # Remove message created via api
+            elif reference.type in [
+                ReferenceType.api.name,
+            ]:
+                context.bot.edit_message_text(
+                    i18n.t("deleted.poll", locale=poll.locale),
+                    chat_id=reference.chat_id,
+                    message_id=reference.message_id,
+                )
+
             # Remove message created via inline_message_id
             else:
                 context.bot.edit_message_text(
