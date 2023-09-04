@@ -17,6 +17,9 @@ from pollbot.poll.option import add_option
 
 poll_model = {
     'id': fields.Integer,
+    'chat_id': fields.Integer,
+    'poll_message_id': fields.Integer,
+    'discussion_message_id': fields.Integer,
 }
 
 
@@ -46,7 +49,7 @@ class PollApi(Resource):
             session.add(reference)
             session.commit()
 
-            self.send_message_to_channel(seeders_channel_id=api_config['seeders_channel_id'], reference=reference, session=session)
+            poll_message_id, discussion_message_id = self.send_message_to_channel(seeders_channel_id=api_config['seeders_channel_id'], reference=reference, session=session)
         except:
             traceback.print_exc()
 
@@ -55,7 +58,12 @@ class PollApi(Resource):
 
             abort(404, message='Something went wrong...')
 
-        return poll, 200
+        return {
+            'id': poll.id,
+            'chat_id': reference.chat_id,
+            'poll_message_id': poll_message_id,
+            'discussion_message_id': discussion_message_id,
+        }, 200
 
     def create_poll(self, user: User, poll_name: str, poll_description: Optional[str], due_date_string: str, session: Session) -> Poll:
         poll = Poll(user)
@@ -88,7 +96,7 @@ class PollApi(Resource):
 
         return poll
 
-    def send_message_to_channel(self, seeders_channel_id: int, reference: Reference, session: Session):
+    def send_message_to_channel(self, seeders_channel_id: int, reference: Reference, session: Session) -> tuple[int, int]:
         poll = reference.poll
         text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
 
@@ -133,6 +141,8 @@ class PollApi(Resource):
             parse_mode='markdown',
             disable_web_page_preview=True,
         )
+
+        return poll_message.message_id, discussion_message.message_id
 
     def create_message_url(self, message: telegram.Message):
         chat_id = str(message.chat_id)
