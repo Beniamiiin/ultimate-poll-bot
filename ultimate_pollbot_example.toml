@@ -9,7 +9,7 @@ max_inline_shares = 20
 
 [api]
 admin = "admin"
-seeders_channel_id = 0
+seeders_chat_id = 0
 
 [database]
 sql_uri = "postgres://localhost/pollbot"

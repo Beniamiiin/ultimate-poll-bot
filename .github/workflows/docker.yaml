@@ -56,12 +56,12 @@ jobs:
           key: "api.admin"
           value: ${{ vars.API_ADMIN }}
 
-      - name: Update api.seeders_channel_id in config file
+      - name: Update api.seeders_chat_id in config file
         uses: ciiiii/toml-editor@1.0.0
         with:
           file: "ultimate_pollbot.toml"
-          key: "api.seeders_channel_id"
-          value: ${{ vars.SEEDERS_CHANNEL_ID }}
+          key: "api.seeders_chat_id"
+          value: ${{ vars.SEEDERS_CHAT_ID }}
 
       - name: Update database.sql_uri in config file
         uses: ciiiii/toml-editor@1.0.0

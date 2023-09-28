@@ -38,7 +38,7 @@ class VoteListApi(Resource):
                 case PollOption.No:
                     vote_json['option'] = 'no'
                 case PollOption.Acknowledge:
-                    vote_json['option'] = 'acknowledge'
+                    vote_json['option'] = 'acknowledged'
 
             votes.append(vote_json)
 

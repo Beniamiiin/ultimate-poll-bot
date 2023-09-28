@@ -46,11 +46,11 @@ class PollListApi(Resource):
                 session=session,
             )
 
-            reference = Reference(poll, ReferenceType.api.name, user=user, chat_id=api_config['seeders_channel_id'])
+            reference = Reference(poll, ReferenceType.api.name, user=user, chat_id=api_config['seeders_chat_id'])
             session.add(reference)
             session.commit()
 
-            poll_message_id, discussion_message_id = self.send_message_to_channel(seeders_channel_id=api_config['seeders_channel_id'], reference=reference, session=session)
+            poll_message_id, discussion_message_id = self.send_message_to_channel(seeders_chat_id=api_config['seeders_chat_id'], reference=reference, session=session)
         except:
             traceback.print_exc()
 
@@ -97,7 +97,7 @@ class PollListApi(Resource):
 
         return poll
 
-    def send_message_to_channel(self, seeders_channel_id: int, reference: Reference, session: Session) -> tuple[int, int]:
+    def send_message_to_channel(self, seeders_chat_id: int, reference: Reference, session: Session) -> tuple[int, int]:
         poll = reference.poll
         text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
 
@@ -105,7 +105,7 @@ class PollListApi(Resource):
 
         poll_message = bot.send_message(
             text=text,
-            chat_id=seeders_channel_id,
+            chat_id=seeders_chat_id,
             reply_markup=keyboard,
             parse_mode='markdown',
             disable_web_page_preview=True,
@@ -117,7 +117,7 @@ class PollListApi(Resource):
         text = f'Тред с обсуждением этого [предложения]({poll_message_url})'
         discussion_message = bot.send_message(
             text=text,
-            chat_id=seeders_channel_id,
+            chat_id=seeders_chat_id,
             parse_mode='markdown',
             disable_web_page_preview=True,
             disable_notification=True,
@@ -136,7 +136,7 @@ class PollListApi(Resource):
         text, keyboard = get_poll_text_and_vote_keyboard(session, poll, user=poll.user)
         bot.edit_message_text(
             text=text,
-            chat_id=seeders_channel_id,
+            chat_id=seeders_chat_id,
             message_id=poll_message.message_id,
             reply_markup=keyboard,
             parse_mode='markdown',
