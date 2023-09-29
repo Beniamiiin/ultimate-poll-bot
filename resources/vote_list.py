@@ -8,7 +8,7 @@ from resources.helpers.option import PollOption
 
 
 vote_model = {
-    'username': fields.String,
+    'user_id': fields.Integer,
     'option': fields.String
 }
 
@@ -29,7 +29,7 @@ class VoteListApi(Resource):
 
         for vote in poll.votes:
             vote_json = {
-                'username': vote.user.username,
+                'user_id': vote.user.id,
             }
 
             match vote.option.name:
