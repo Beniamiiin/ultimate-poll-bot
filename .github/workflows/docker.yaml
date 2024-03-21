@@ -29,42 +29,42 @@ jobs:
           target: "ultimate_pollbot.toml"
 
       - name: Update telegram.bot_name in config file
-        uses: colathro/toml-editor@1.1.0
+        uses: Beniamiiin/toml-editor@1.1.0
         with: 
           file: "ultimate_pollbot.toml"
           key: "telegram.bot_name"
           value: ${{ vars.BOT_NAME }}
 
       - name: Update telegram.api_key in config file
-        uses: colathro/toml-editor@1.1.0
+        uses: Beniamiiin/toml-editor@1.1.0
         with:
           file: "ultimate_pollbot.toml"
           key: "telegram.api_key"
           value: ${{ secrets.BOT_TOKEN }}
 
       - name: Update telegram.admins in config file
-        uses: colathro/toml-editor@1.1.0
+        uses: Beniamiiin/toml-editor@1.1.0
         with:
           file: "ultimate_pollbot.toml"
           key: "telegram.admins"
           value: ${{ vars.BOT_ADMINS }}
 
       - name: Update api.admin in config file
-        uses: colathro/toml-editor@1.1.0
+        uses: Beniamiiin/toml-editor@1.1.0
         with:
           file: "ultimate_pollbot.toml"
           key: "api.admin"
           value: ${{ vars.API_ADMIN }}
 
       - name: Update api.seeders_chat_id in config file
-        uses: colathro/toml-editor@1.1.0
+        uses: Beniamiiin/toml-editor@1.1.0
         with:
           file: "ultimate_pollbot.toml"
           key: "api.seeders_chat_id"
           value: ${{ vars.SEEDERS_CHAT_ID }}
 
       - name: Update database.sql_uri in config file
-        uses: colathro/toml-editor@1.1.0
+        uses: Beniamiiin/toml-editor@1.1.0
         with:
           file: "ultimate_pollbot.toml"
           key: "database.sql_uri"
