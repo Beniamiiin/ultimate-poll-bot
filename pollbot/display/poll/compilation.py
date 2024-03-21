@@ -91,8 +91,8 @@ def compile_poll_text(
         not_visible = i18n.t("poll.results_not_visible", locale=poll.locale)
         lines.append(f"_{not_visible}_")
 
-    lines += get_option_information(session, poll, context, summarize)
-    lines.append("")
+    # lines += get_option_information(session, poll, context, summarize)
+    # lines.append("")
 
     if context.limited_votes:
         lines.append(

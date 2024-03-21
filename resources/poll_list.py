@@ -79,7 +79,7 @@ class PollListApi(Resource):
         poll.allow_new_options = False
         poll.allow_sharing = False
         poll.show_percentage = False
-        poll.show_option_votes = True
+        poll.show_option_votes = False
         poll.european_date_format = user.european_date_format
         poll.permanently_summarized = False
         poll.compact_buttons = False
