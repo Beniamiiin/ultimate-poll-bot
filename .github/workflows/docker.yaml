@@ -23,13 +23,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create config file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "ultimate_pollbot_example.toml"
-          target: "ultimate_pollbot.toml"
-
-      - name: Reclaim ultimate_pollbot.toml
-        run: chown -R 777 ultimate_pollbot.toml
+        run: cp ultimate_pollbot_example.toml ultimate_pollbot.toml
 
       - name: Update telegram.bot_name in config file
         uses: colathro/toml-editor@1.1.1
