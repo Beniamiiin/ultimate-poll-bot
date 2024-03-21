@@ -21,7 +21,7 @@ poll:
     anonymous: "Опрос анонимный!"
     results_not_visible: "Results are not visible, until poll is closed!"
     vote_times: "\nEvery user can vote *%{amount} times*"
-    due: "\n📅 Опрос завершится: %{date}"
+    due: "\n📅 Голосование анонимное и завершится: %{date}"
     closed: "\n⚠️ *This poll is closed* ⚠️"
     many_users_voted: "*%{count} пользователей* проголосовали"
     one_user_voted: "*Один пользователь* проголосовал"
