@@ -82,27 +82,27 @@ def compile_poll_text(
         lines.append(f"{poll.description}")
 
     # Anonymity information
-    # if not context.show_results or context.anonymous:
-    #     lines.append("")
-    # if context.anonymous:
-    #     anonymous = i18n.t("poll.anonymous", locale=poll.locale)
-    #     lines.append(f"_{anonymous}_")
-    # if not context.show_results:
-    #     not_visible = i18n.t("poll.results_not_visible", locale=poll.locale)
-    #     lines.append(f"_{not_visible}_")
+    if not context.show_results or context.anonymous:
+        lines.append("")
+    if context.anonymous:
+        anonymous = i18n.t("poll.anonymous", locale=poll.locale)
+        lines.append(f"_{anonymous}_")
+    if not context.show_results:
+        not_visible = i18n.t("poll.results_not_visible", locale=poll.locale)
+        lines.append(f"_{not_visible}_")
 
-    # lines += get_option_information(session, poll, context, summarize)
-    # lines.append("")
+    lines += get_option_information(session, poll, context, summarize)
+    lines.append("")
 
-    # if context.limited_votes:
-    #     lines.append(
-    #         i18n.t("poll.vote_times", locale=poll.locale, amount=poll.number_of_votes)
-    #     )
+    if context.limited_votes:
+        lines.append(
+            i18n.t("poll.vote_times", locale=poll.locale, amount=poll.number_of_votes)
+        )
 
     # Total user count information
-    # information_line = get_vote_information_line(poll, context)
-    # if information_line is not None:
-    #     lines.append(information_line)
+    information_line = get_vote_information_line(poll, context)
+    if information_line is not None:
+        lines.append(information_line)
 
     if (
         context.show_results

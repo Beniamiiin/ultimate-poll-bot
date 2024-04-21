@@ -74,12 +74,12 @@ class PollListApi(Resource):
         poll.poll_type = PollType.single_vote.name
         poll.number_of_votes = 0
         poll.anonymous = True
-        poll.results_visible = False
+        poll.results_visible = True
         poll.set_due_date(parser.parse(due_date_string))
         poll.allow_new_options = False
         poll.allow_sharing = False
-        poll.show_percentage = False
-        poll.show_option_votes = False
+        poll.show_percentage = True
+        poll.show_option_votes = True
         poll.european_date_format = user.european_date_format
         poll.permanently_summarized = False
         poll.compact_buttons = False
