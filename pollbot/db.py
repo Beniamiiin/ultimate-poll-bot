@@ -20,3 +20,6 @@ def get_session(connection: None = None) -> Session:
     """Get a new db session."""
     session = scoped_session(sessionmaker(bind=engine))
     return cast(Session, session)
+
+
+current_session = get_session()

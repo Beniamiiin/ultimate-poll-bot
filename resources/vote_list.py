@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource, abort, marshal_with, fields
 
-from pollbot.db import get_session
+from pollbot.db import current_session
 from pollbot.models import Poll
 from resources.helpers.option import PollOption
 
@@ -15,10 +15,9 @@ vote_model = {
 class VoteListApi(Resource):
     @marshal_with(vote_model)
     def get(self):
-        session = get_session()
         poll_id = request.args.get('poll_id')
 
-        poll = session.query(Poll).get(poll_id)
+        poll = current_session.query(Poll).get(poll_id)
 
         if poll is None:
             abort(404, message='Not found')

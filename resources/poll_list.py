@@ -8,7 +8,7 @@ from flask_restful import Resource, marshal_with, fields, abort
 from sqlalchemy.orm import Session
 
 from pollbot.config import config
-from pollbot.db import get_session
+from pollbot.db import current_session
 from pollbot.display.poll.compilation import get_poll_text_and_vote_keyboard
 from pollbot.enums import ReferenceType, PollType
 from pollbot.models import Poll, User, Reference
@@ -26,12 +26,11 @@ poll_list_model = {
 class PollListApi(Resource):
     @marshal_with(poll_list_model)
     def post(self):
-        session = get_session()
         request_body = request.get_json()
         api_config = config['api']
 
         try:
-            user = session.query(User).get({"username": api_config['admin']})
+            user = current_session.query(User).get({"username": api_config['admin']})
             user.expected_input = None
             user.current_poll = None
 
@@ -40,19 +39,19 @@ class PollListApi(Resource):
                 poll_name=request_body['name'],
                 poll_description=request_body['description'] if 'description' in request_body else None,
                 due_date_string=request_body['due_date'],
-                session=session,
+                session=current_session,
             )
 
             reference = Reference(poll, ReferenceType.api.name, user=user, chat_id=api_config['seeders_chat_id'])
-            session.add(reference)
-            session.commit()
+            current_session.add(reference)
+            current_session.commit()
 
             poll_message_id, discussion_message_id = self.send_message_to_channel(seeders_chat_id=api_config['seeders_chat_id'], reference=reference, session=session)
         except:
             traceback.print_exc()
 
-            session.delete(poll)
-            session.commit()
+            current_session.delete(poll)
+            current_session.commit()
 
             abort(404, message='Something went wrong...')
 
