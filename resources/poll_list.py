@@ -31,7 +31,7 @@ class PollListApi(Resource):
         api_config = config['api']
 
         try:
-            user = session.query(User).where(User.username == api_config['admin'])
+            user = session.query(User).get({"username": api_config['admin']})
             user.expected_input = None
             user.current_poll = None
 

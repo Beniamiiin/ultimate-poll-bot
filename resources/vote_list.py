@@ -18,7 +18,7 @@ class VoteListApi(Resource):
         session = get_session()
         poll_id = request.args.get('poll_id')
 
-        poll = session.query(Poll).where(Poll.id == poll_id)
+        poll = session.query(Poll).get(poll_id)
 
         if poll is None:
             abort(404, message='Not found')
