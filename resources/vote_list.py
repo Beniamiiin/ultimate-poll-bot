@@ -1,4 +1,3 @@
-from sqlalchemy import select
 from flask import request
 from flask_restful import Resource, abort, marshal_with, fields
 
@@ -19,8 +18,7 @@ class VoteListApi(Resource):
         session = get_session()
         poll_id = request.args.get('poll_id')
 
-        stmt = select(Poll).where(Poll.id == poll_id)
-        poll = session.scalar(stmt)
+        poll = session.query(Poll).where(Poll.id == poll_id)
 
         if poll is None:
             abort(404, message='Not found')

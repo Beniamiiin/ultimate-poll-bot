@@ -5,7 +5,6 @@ import telegram
 from dateutil import parser
 from flask import request
 from flask_restful import Resource, marshal_with, fields, abort
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from pollbot.config import config
@@ -32,9 +31,7 @@ class PollListApi(Resource):
         api_config = config['api']
 
         try:
-            stmt = select(User).where(User.username == api_config['admin'])
-
-            user = session.scalar(stmt)
+            user = session.query(User).where(User.username == api_config['admin'])
             user.expected_input = None
             user.current_poll = None
 
