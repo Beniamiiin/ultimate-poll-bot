@@ -26,11 +26,14 @@ poll_list_model = {
 class PollListApi(Resource):
     @marshal_with(poll_list_model)
     def post(self):
-        request_body = request.get_json()
         api_config = config['api']
 
+        request_body = request.get_json()
+
+        poll = None
+
         try:
-            user = current_session.query(User).get({"username": api_config['admin']})
+            user = current_session.query(User).filter_by(username=api_config['admin']).first()
             user.expected_input = None
             user.current_poll = None
 
@@ -46,7 +49,11 @@ class PollListApi(Resource):
             current_session.add(reference)
             current_session.commit()
 
-            poll_message_id, discussion_message_id = self.send_message_to_channel(seeders_chat_id=api_config['seeders_chat_id'], reference=reference, session=session)
+            poll_message_id, discussion_message_id = self.send_message_to_channel(
+                seeders_chat_id=api_config['seeders_chat_id'],
+                reference=reference,
+                session=current_session,
+            )
         except:
             traceback.print_exc()
 
