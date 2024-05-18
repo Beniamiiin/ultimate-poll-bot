@@ -22,4 +22,6 @@ def get_session(connection: None = None) -> Session:
     return cast(Session, session)
 
 
-current_session = get_session()
+def get_session_for_api(connection: None = None) -> Session:
+    """Get a new db session."""
+    return sessionmaker(bind=engine)

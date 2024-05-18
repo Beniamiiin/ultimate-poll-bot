@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource, abort, marshal_with, fields
 
-from pollbot.db import current_session
+from pollbot.db import get_session_for_api
 from pollbot.models import Poll
 from resources.helpers.option import PollOption
 
@@ -15,28 +15,31 @@ vote_model = {
 class VoteListApi(Resource):
     @marshal_with(vote_model)
     def get(self):
-        poll_id = request.args.get('poll_id')
+        Session = get_session_for_api()
 
-        poll = current_session.query(Poll).get(poll_id)
+        with Session() as session:
+            poll_id = request.args.get('poll_id')
 
-        if poll is None:
-            abort(404, message='Not found')
+            poll = session.query(Poll).get(poll_id)
 
-        votes = []
+            if poll is None:
+                abort(404, message='Not found')
 
-        for vote in poll.votes:
-            vote_json = {
-                'user_id': vote.user.id,
-            }
+            votes = []
 
-            match vote.option.name:
-                case PollOption.Yes:
-                    vote_json['option'] = 'yes'
-                case PollOption.No:
-                    vote_json['option'] = 'no'
-                case PollOption.Acknowledge:
-                    vote_json['option'] = 'acknowledged'
+            for vote in poll.votes:
+                vote_json = {
+                    'user_id': vote.user.id,
+                }
 
-            votes.append(vote_json)
+                match vote.option.name:
+                    case PollOption.Yes:
+                        vote_json['option'] = 'yes'
+                    case PollOption.No:
+                        vote_json['option'] = 'no'
+                    case PollOption.Acknowledge:
+                        vote_json['option'] = 'acknowledged'
 
-        return votes, 200
+                votes.append(vote_json)
+
+            return votes, 200

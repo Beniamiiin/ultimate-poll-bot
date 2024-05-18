@@ -8,7 +8,7 @@ from flask_restful import Resource, marshal_with, fields, abort
 from sqlalchemy.orm import Session
 
 from pollbot.config import config
-from pollbot.db import current_session
+from pollbot.db import get_session_for_api
 from pollbot.display.poll.compilation import get_poll_text_and_vote_keyboard
 from pollbot.enums import ReferenceType, PollType
 from pollbot.models import Poll, User, Reference
@@ -26,48 +26,51 @@ poll_list_model = {
 class PollListApi(Resource):
     @marshal_with(poll_list_model)
     def post(self):
-        api_config = config['api']
+        Session = get_session_for_api()
 
-        request_body = request.get_json()
+        with Session() as session:
+            api_config = config['api']
 
-        poll = None
+            request_body = request.get_json()
 
-        try:
-            user = current_session.query(User).filter_by(username=api_config['admin']).first()
-            user.expected_input = None
-            user.current_poll = None
+            poll = None
 
-            poll = self.create_poll(
-                user=user,
-                poll_name=request_body['name'],
-                poll_description=request_body['description'] if 'description' in request_body else None,
-                due_date_string=request_body['due_date'],
-                session=current_session,
-            )
+            try:
+                user = session.query(User).filter_by(username=api_config['admin']).first()
+                user.expected_input = None
+                user.current_poll = None
 
-            reference = Reference(poll, ReferenceType.api.name, user=user, chat_id=api_config['seeders_chat_id'])
-            current_session.add(reference)
-            current_session.commit()
+                poll = self.create_poll(
+                    user=user,
+                    poll_name=request_body['name'],
+                    poll_description=request_body['description'] if 'description' in request_body else None,
+                    due_date_string=request_body['due_date'],
+                    session=session,
+                )
 
-            poll_message_id, discussion_message_id = self.send_message_to_channel(
-                seeders_chat_id=api_config['seeders_chat_id'],
-                reference=reference,
-                session=current_session,
-            )
-        except:
-            traceback.print_exc()
+                reference = Reference(poll, ReferenceType.api.name, user=user, chat_id=api_config['seeders_chat_id'])
+                session.add(reference)
+                session.commit()
 
-            current_session.delete(poll)
-            current_session.commit()
+                poll_message_id, discussion_message_id = self.send_message_to_channel(
+                    seeders_chat_id=api_config['seeders_chat_id'],
+                    reference=reference,
+                    session=session,
+                )
+            except:
+                traceback.print_exc()
 
-            abort(404, message='Something went wrong...')
+                session.delete(poll)
+                session.commit()
 
-        return {
-            'id': poll.id,
-            'chat_id': reference.chat_id,
-            'poll_message_id': poll_message_id,
-            'discussion_message_id': discussion_message_id,
-        }, 200
+                abort(404, message='Something went wrong...')
+
+            return {
+                'id': poll.id,
+                'chat_id': reference.chat_id,
+                'poll_message_id': poll_message_id,
+                'discussion_message_id': discussion_message_id,
+            }, 200
 
     def create_poll(self, user: User, poll_name: str, poll_description: Optional[str], due_date_string: str, session: Session) -> Poll:
         poll = Poll(user)
