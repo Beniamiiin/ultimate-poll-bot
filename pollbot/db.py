@@ -11,6 +11,7 @@ engine = create_engine(
     config["database"]["sql_uri"],
     pool_size=config["database"]["connection_count"],
     max_overflow=config["database"]["overflow_count"],
+    pool_pre_ping=True,
     echo=False,
 )
 base = declarative_base(bind=engine)
